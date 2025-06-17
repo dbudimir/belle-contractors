@@ -9,21 +9,13 @@ import ContactSection from "@/components/page-sections/contact-section";
 import FooterSection from "@/components/page-sections/footer-section";
 import { scrollToAnchor } from "@/helpers/scrollToAnchor";
 
-// Smooth scroll utility
-export const scrollToSection = (id: string) => {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth" });
-  }
-};
-
 export default function ConstructionSitePage() {
   return (
     <div>
       <Nav />
 
       <main>
-        <HeroSection scrollToSection={scrollToSection} />
+        <HeroSection scrollToSection={scrollToAnchor} />
         <PropertyMaintenanceSection />
         <WhatWeDoSection />
         <ContactSection />

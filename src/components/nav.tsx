@@ -68,7 +68,7 @@ const NavContainer = styled.nav<{ $hasBackground: boolean }>`
 
   ${(props) => props.theme.mediaQueries.tablet} {
     padding: 1rem;
-    top: 42px; /* Height of mobile phone bar */
+    top: 40px; /* Height of mobile phone bar */
   }
 `;
 

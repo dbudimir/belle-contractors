@@ -20,18 +20,18 @@ const HeroContainer = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
   position: relative;
 
-  @media (min-width: 640px) {
+  ${(props) => props.theme.mediaQueries.desktop} {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
 
-  @media (min-width: 1024px) {
-    padding-left: 2rem;
-    padding-right: 2rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 `;
 
@@ -51,6 +51,7 @@ const HeroSectionAnimation = styled.div`
   transform: translate(-50%, -50%) rotate(-45deg);
   width: 200vw;
   z-index: 2;
+  backdrop-filter: blur(2px);
 `;
 
 const BackgroundImageWrapper = styled.div`
@@ -71,43 +72,48 @@ const BackgroundImage = styled(Image)`
 `;
 
 const StyledH1 = styled.h1`
-  font-size: 2.5rem;
-  @media (min-width: 640px) {
-    font-size: 3.5rem;
-  }
-  @media (min-width: 768px) {
-    font-size: 3.75rem;
-  }
+  font-size: 3.75rem;
   font-weight: 600;
   line-height: 1;
   color: #3c3744; /* text-brand-dark-gray-purple */
   margin-bottom: 0.5rem;
+
+  ${(props) => props.theme.mediaQueries.tablet} {
+    font-size: 3.5rem;
+  }
+
+  ${(props) => props.theme.mediaQueries.mobile} {
+    font-size: 2.5rem;
+  }
 `;
 
 const StyledH2 = styled.h2`
-  font-size: 1.25rem;
-  @media (min-width: 640px) {
-    font-size: 1.5rem;
-  }
-  @media (min-width: 768px) {
-    font-size: 2.5rem;
-  }
+  font-size: 2.5rem;
   margin-bottom: 1.25rem;
   color: #3c3744; /* text-brand-dark-gray-purple */
   font-weight: 400;
   line-height: 1;
+
+  ${(props) => props.theme.mediaQueries.tablet} {
+    font-size: 1.5rem;
+  }
+
+  ${(props) => props.theme.mediaQueries.mobile} {
+    font-size: 1.25rem;
+  }
 `;
 
 const StyledP = styled.p`
-  font-size: 1.125rem;
-  @media (min-width: 640px) {
-    font-size: 1.25rem;
-  }
+  font-size: 1.25rem;
   color: #3e3fa2; /* text-accent-primary */
   max-width: 36rem;
   margin-bottom: 1.5rem;
   font-family: Helvetica, Arial, sans-serif;
   color: #3c3744; /* text-brand-dark-gray-purple */
+
+  ${(props) => props.theme.mediaQueries.tablet} {
+    font-size: 1.125rem;
+  }
 `;
 
 const ChevronRightIcon = styled(ChevronRight)`
@@ -147,13 +153,15 @@ const FlexHeroSection: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
           <StyledH1>Keep units moving</StyledH1>
           <StyledH2>We'll handle the rest</StyledH2>
           <StyledP>
-            Reliable turnover, prep, and repair services for property managers,
-            home and apartment owners, and more.
+            Reliable repair and renovation services for home owners, property
+            managers and real estate investors.
           </StyledP>
-          <Button onClick={() => scrollToSection("contact")} text="Contact Us">
-            Contact Us
-            <ChevronRightIcon />
-          </Button>
+          <Button
+            onClick={() => scrollToSection("contact")}
+            text="Contact Us"
+            rightIcon={<ChevronRightIcon />}
+            animateIcon
+          />
         </HeroCopyContainer>
       </HeroContainer>
     </FlexHeroSectionContainer>

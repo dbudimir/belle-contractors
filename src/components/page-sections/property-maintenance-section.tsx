@@ -1,52 +1,51 @@
 "use client";
 
 import Image from "next/image";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Wrench, Briefcase, UserCheck, CheckCircle } from "lucide-react";
 import styled from "styled-components";
 import type React from "react";
 
 // Styled Components
 const Section = styled.section`
-  padding: 4rem 0;
+  padding: 6rem 0;
   background-color: #ffffff; /* surface-card */
 
-  @media (min-width: 768px) {
-    padding: 6rem 0;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding: 4rem 0;
   }
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
 
-  @media (min-width: 640px) {
+  ${(props) => props.theme.mediaQueries.desktop} {
     padding: 0 1.5rem;
   }
 
-  @media (min-width: 1024px) {
-    padding: 0 2rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding: 0 1rem;
   }
 `;
 
 const HeaderWrapper = styled.div`
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
 
-  @media (min-width: 768px) {
-    margin-bottom: 4rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    margin-bottom: 3rem;
   }
 `;
 
 const Title = styled.h2`
-  font-size: 1.875rem;
+  font-size: 2.25rem;
   font-weight: 700;
   color: #3c3744; /* text-primary */
   margin-bottom: 1rem;
 
-  @media (min-width: 640px) {
-    font-size: 2.25rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    font-size: 1.875rem;
   }
 `;
 
@@ -60,19 +59,23 @@ const Subtitle = styled.p`
 
 const Grid = styled.div`
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(3, 1fr);
+  ${(props) => props.theme.mediaQueries.tablet} {
+    grid-template-columns: repeat(1, 1fr);
   }
 `;
 
-const StyledCard = styled(Card)`
+const StyledCard = styled.div`
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   position: relative;
   transition: box-shadow 0.3s ease;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
 
   &:hover {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
@@ -101,9 +104,16 @@ const ImageWrapper = styled.div`
   width: 100%;
 `;
 
-const CardHeader = styled(CardTitle)`
+const CardHeader = styled.h3`
   color: #3e3fa2; /* accent-primary */
   padding: 1.5rem 1.5rem 1rem 1.5rem;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+`;
+
+const CardContent = styled.div`
+  padding: 0 1.5rem 1.5rem 1.5rem;
 `;
 
 const Description = styled.p`
@@ -186,7 +196,7 @@ const PropertyMaintenanceSection: React.FC = () => {
             <StyledCard key={index}>
               {/* Icon positioned absolutely in top right */}
               <IconWrapper>
-                <service.icon className="w-6 h-6" />
+                <service.icon />
               </IconWrapper>
 
               {/* Image Section */}
@@ -195,14 +205,12 @@ const PropertyMaintenanceSection: React.FC = () => {
                   src={service.image}
                   alt={service.title}
                   fill
-                  className="object-cover"
+                  style={{ objectFit: "cover", objectPosition: "center" }}
                 />
               </ImageWrapper>
 
               {/* Card Content */}
-              <CardHeader>
-                <>{service.title}</>
-              </CardHeader>
+              <CardHeader>{service.title}</CardHeader>
               <CardContent>
                 <Description>{service.description}</Description>
                 <FeatureList>

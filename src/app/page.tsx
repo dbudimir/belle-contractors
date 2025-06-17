@@ -1,8 +1,7 @@
 "use client";
 
 // Import section components
-import Nav, { navLinks } from "@/components/nav";
-import NavNew from "@/components/NavNew";
+import Nav from "@/components/Nav";
 import HeroSection from "@/components/page-sections/hero-section";
 import PropertyMaintenanceSection from "@/components/page-sections/property-maintenance-section";
 import WhatWeDoSection from "@/components/page-sections/what-we-do-section";
@@ -20,17 +19,13 @@ export const scrollToSection = (id: string) => {
 
 export default function ConstructionSitePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800">
-      <NavNew scrollToSection={scrollToAnchor} />
+    <div>
+      <Nav />
 
       <main>
         <HeroSection scrollToSection={scrollToSection} />
         <PropertyMaintenanceSection />
         <WhatWeDoSection />
-
-        {/* coming soon */}
-        {/* <PortfolioSection />
-        <TestimonialsSection /> */}
         <ContactSection />
       </main>
 

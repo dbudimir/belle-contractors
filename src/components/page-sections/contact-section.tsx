@@ -1,40 +1,35 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import Button from "@/components/Button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { submitContactForm } from "@/lib/actions"; // Server action for the form
 import type React from "react";
 
 // Styled Components
 const ContactSectionWrapper = styled.section`
-  padding: 4rem 0;
+  padding: 6rem 0;
   position: relative;
   min-height: 600px;
   max-width: 100vw;
   overflow: hidden;
 
-  @media (min-width: 768px) {
-    padding: 6rem 0;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding: 4rem 0;
   }
 `;
 
 const BackgroundImageContainer = styled.div`
   position: absolute;
   inset: 0;
-  width: 150vw;
-  left: 25%;
-  transform: translateX(-50%);
+  width: 120%;
+  height: 100%;
+`;
+
+const StyledImage = styled(Image)`
+  object-fit: cover;
+  object-position: center;
+  transform: translateX(-15%);
 `;
 
 const BackgroundOverlay = styled.div`
@@ -46,16 +41,16 @@ const BackgroundOverlay = styled.div`
 const ContentContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
   position: relative;
   z-index: 10;
 
-  @media (min-width: 640px) {
+  ${(props) => props.theme.mediaQueries.desktop} {
     padding: 0 1.5rem;
   }
 
-  @media (min-width: 1024px) {
-    padding: 0 2rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding: 0 1rem;
   }
 `;
 
@@ -66,32 +61,38 @@ const FlexContainer = styled.div`
   min-height: 600px;
 `;
 
-const StyledCard = styled(Card)`
-  padding: 1.5rem;
+const StyledCard = styled.div`
+  padding: 2rem;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   background-color: #ffffff;
   backdrop-filter: blur(4px);
   max-width: 32rem;
   width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
 
-  @media (min-width: 640px) {
-    padding: 2rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding: 1.5rem;
   }
 `;
 
-const StyledCardHeader = styled(CardHeader)`
+const StyledCardHeader = styled.div`
   padding: 0;
   margin-bottom: 1.5rem;
 `;
 
-const StyledCardTitle = styled(CardTitle)`
-  font-size: 1.5rem;
+const StyledCardTitle = styled.h2`
+  font-size: 2rem;
+  line-height: 1.25;
   font-weight: 700;
   color: #3c3744;
+  margin: 0 0 1rem 0;
+  max-width: 25rem;
 `;
 
-const StyledCardDescription = styled(CardDescription)`
+const StyledCardDescription = styled.p`
   color: #6b7280;
+  margin: 0;
 `;
 
 const StyledForm = styled.form`
@@ -105,59 +106,159 @@ const FormGroup = styled.div`
   flex-direction: column;
 `;
 
-const StyledLabel = styled(Label)`
+const StyledLabel = styled.label`
   font-weight: 500;
   color: #374151;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
 `;
 
-const StyledInput = styled(Input)`
+const StyledInput = styled.input`
   margin-top: 0.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  }
 `;
 
-const StyledTextarea = styled(Textarea)`
+const StyledTextarea = styled.textarea`
   margin-top: 0.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  resize: vertical;
+  min-height: 100px;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  }
 `;
 
-const StyledButton = styled(Button)`
+const SuccessMessage = styled.div`
   width: 100%;
-  background-color: #3e3fa2;
-
-  &:hover {
-    background-color: #3066be;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-  }
-`;
-
-const SuccessMessage = styled.p`
+  padding: 1rem 1.25rem;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   font-size: 0.875rem;
-  color: #16a34a;
-  margin-top: 0.5rem;
+  color: #166534;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+
+  &::before {
+    content: "✓";
+    margin-right: 0.75rem;
+    font-weight: 700;
+    color: #16a34a;
+    font-size: 1rem;
+  }
 `;
 
-const ErrorMessage = styled.p`
+const ErrorMessage = styled.div`
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   font-size: 0.875rem;
-  color: #dc2626;
-  margin-top: 0.5rem;
+  color: #991b1b;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+
+  &::before {
+    content: "⚠";
+    margin-right: 0.75rem;
+    font-weight: 700;
+    color: #dc2626;
+    font-size: 1rem;
+  }
 `;
+
+interface FormState {
+  success: boolean;
+  message: string;
+}
 
 const ContactSection: React.FC = () => {
-  const [formState, formAction, isPending] = useActionState(
-    submitContactForm,
-    null
-  );
+  const [formState, setFormState] = useState<FormState | null>(null);
+  const [isPending, setIsPending] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPending(true);
+    setFormState(null);
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      message: formData.get("message") as string,
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      setFormState(result);
+
+      if (result.success) {
+        setFormState({
+          success: true,
+          message: result.message,
+        });
+      }
+    } catch (error) {
+      setFormState({
+        success: false,
+        message: error instanceof Error ? error.message : "An error occurred",
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <ContactSectionWrapper id="contact">
       {/* Full-width background image */}
       <BackgroundImageContainer>
-        <Image
+        <StyledImage
           src="/images/construction-50-50.jpg"
           alt="Construction work in progress"
           fill
-          className="object-cover"
         />
         {/* Overlay for better text readability */}
         <BackgroundOverlay />
@@ -170,21 +271,21 @@ const ContactSection: React.FC = () => {
           <StyledCard>
             <StyledCardHeader>
               <StyledCardTitle>
-                Let's build something great together.
+                Let&apos;s build something great together.
               </StyledCardTitle>
               <StyledCardDescription>
                 Whether you're planning a major project, need ongoing property
                 maintenance, or have a quick repair, we're here to help.
               </StyledCardDescription>
             </StyledCardHeader>
-            <StyledForm action={formAction}>
+            <StyledForm onSubmit={handleSubmit}>
               <FormGroup>
                 <StyledLabel htmlFor="name">Full Name</StyledLabel>
                 <StyledInput
                   id="name"
                   name="name"
                   type="text"
-                  placeholder="e.g., John Doe"
+                  placeholder="First and Last Name"
                   required
                 />
               </FormGroup>
@@ -194,7 +295,7 @@ const ContactSection: React.FC = () => {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="e.g., john.doe@example.com"
+                  placeholder="Email"
                   required
                 />
               </FormGroup>
@@ -204,7 +305,7 @@ const ContactSection: React.FC = () => {
                   id="phone"
                   name="phone"
                   type="tel"
-                  placeholder="e.g., (555) 123-4567"
+                  placeholder="Phone Number"
                 />
               </FormGroup>
               <FormGroup>
@@ -212,7 +313,7 @@ const ContactSection: React.FC = () => {
                 <StyledTextarea
                   id="message"
                   name="message"
-                  placeholder="Tell us about your project or inquiry..."
+                  placeholder="Tell us about your project"
                   required
                   rows={4}
                 />
@@ -222,7 +323,7 @@ const ContactSection: React.FC = () => {
                 text={isPending ? "Sending..." : "Get In Touch"}
                 size="sm"
                 color="#3e3fa2"
-                onClick={() => {}}
+                type="submit"
                 disabled={isPending}
               />
 

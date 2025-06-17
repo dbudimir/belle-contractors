@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   RefreshCw,
   CheckCircle,
@@ -14,45 +13,42 @@ import type React from "react";
 
 // Styled Components
 const Section = styled.section`
-  padding: 4rem 0;
-  background-color: #b4c5e4; /* brand-light-blue-gray */
+  padding: 6rem 0;
+  background-color: #f5f5f5; /* brand-light-blue-gray */
 
-  @media (min-width: 768px) {
-    padding: 6rem 0;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding: 4rem 0;
   }
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 2rem;
 
-  @media (min-width: 640px) {
+  ${(props) => props.theme.mediaQueries.desktop} {
     padding: 0 1.5rem;
   }
 
-  @media (min-width: 1024px) {
-    padding: 0 2rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    padding: 0 1rem;
   }
 `;
 
 const HeaderWrapper = styled.div`
   text-align: center;
   margin-bottom: 3rem;
-
-  @media (min-width: 768px) {
-    margin-bottom: 4rem;
-  }
 `;
 
 const Title = styled.h2`
-  font-size: 1.875rem;
+  font-size: 2.25rem;
   font-weight: 700;
   color: #3c3744; /* text-primary */
   margin-bottom: 1rem;
+  line-height: 1.2;
 
-  @media (min-width: 640px) {
-    font-size: 2.25rem;
+  ${(props) => props.theme.mediaQueries.tablet} {
+    font-size: 1.875rem;
   }
 `;
 
@@ -66,23 +62,26 @@ const Subtitle = styled.p`
 
 const Grid = styled.div`
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 
-  @media (min-width: 640px) {
+  ${(props) => props.theme.mediaQueries.desktop} {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
+  ${(props) => props.theme.mediaQueries.tablet} {
+    grid-template-columns: repeat(1, 1fr);
   }
 `;
 
-const StyledCard = styled(Card)`
+const StyledCard = styled.div`
   text-align: center;
   background-color: #ffffff; /* white */
   transition: box-shadow 0.3s ease;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
 
   &:hover {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
@@ -90,12 +89,11 @@ const StyledCard = styled(Card)`
   }
 `;
 
-const StyledCardContent = styled(CardContent)`
+const StyledCardContent = styled.div`
   padding: 1.5rem;
 `;
 
 const IconWrapper = styled.div`
-  margin-bottom: 1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -104,6 +102,23 @@ const IconWrapper = styled.div`
   border-radius: 50%;
   background-color: #ffffff; /* brand-white */
   color: #3e3fa2; /* accent-primary */
+  transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  @keyframes iconRotateSpring {
+    0% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(20deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  ${StyledCard}:hover & {
+    animation: iconRotateSpring 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
 `;
 
 const ServiceTitle = styled.h3`
@@ -130,7 +145,7 @@ const ServiceTile = ({
   <StyledCard>
     <StyledCardContent>
       <IconWrapper>
-        <Icon className="w-8 h-8" />
+        <Icon />
       </IconWrapper>
       <ServiceTitle>{title}</ServiceTitle>
       <ServiceDescription>{description}</ServiceDescription>

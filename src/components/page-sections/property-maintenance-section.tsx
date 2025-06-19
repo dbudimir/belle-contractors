@@ -42,7 +42,8 @@ const Title = styled.h2`
   font-size: 2.25rem;
   font-weight: 700;
   color: #3c3744; /* text-primary */
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
 
   ${(props) => props.theme.mediaQueries.tablet} {
     font-size: 1.875rem;
@@ -102,6 +103,7 @@ const ImageWrapper = styled.div`
   position: relative;
   height: 12rem;
   width: 100%;
+  overflow: hidden;
 `;
 
 const CardHeader = styled.h3`
@@ -204,7 +206,8 @@ const PropertyMaintenanceSection: React.FC = () => {
                 <Image
                   src={service.image}
                   alt={service.title}
-                  fill
+                  width={400}
+                  height={250}
                   style={{ objectFit: "cover", objectPosition: "center" }}
                 />
               </ImageWrapper>

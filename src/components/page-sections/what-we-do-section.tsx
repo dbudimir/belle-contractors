@@ -44,7 +44,7 @@ const Title = styled.h2`
   font-size: 2.25rem;
   font-weight: 700;
   color: #3c3744; /* text-primary */
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   line-height: 1.2;
 
   ${(props) => props.theme.mediaQueries.tablet} {

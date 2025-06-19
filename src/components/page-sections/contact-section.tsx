@@ -280,7 +280,7 @@ const ContactSection: React.FC = () => {
             </StyledCardHeader>
             <StyledForm onSubmit={handleSubmit}>
               <FormGroup>
-                <StyledLabel htmlFor="name">Full Name</StyledLabel>
+                <StyledLabel htmlFor="name">Full Name *</StyledLabel>
                 <StyledInput
                   id="name"
                   name="name"
@@ -290,7 +290,7 @@ const ContactSection: React.FC = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <StyledLabel htmlFor="email">Email Address</StyledLabel>
+                <StyledLabel htmlFor="email">Email Address *</StyledLabel>
                 <StyledInput
                   id="email"
                   name="email"
@@ -300,21 +300,23 @@ const ContactSection: React.FC = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <StyledLabel htmlFor="phone">Phone Number</StyledLabel>
+                <StyledLabel htmlFor="phone">Phone Number *</StyledLabel>
                 <StyledInput
                   id="phone"
                   name="phone"
                   type="tel"
                   placeholder="Phone Number"
+                  required
                 />
               </FormGroup>
               <FormGroup>
-                <StyledLabel htmlFor="message">Project Details</StyledLabel>
+                <StyledLabel htmlFor="message">
+                  How can we help? (optional)
+                </StyledLabel>
                 <StyledTextarea
                   id="message"
                   name="message"
                   placeholder="Tell us about your project"
-                  required
                   rows={4}
                 />
               </FormGroup>

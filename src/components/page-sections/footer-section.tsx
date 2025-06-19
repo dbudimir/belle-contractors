@@ -4,10 +4,6 @@ import Image from "next/image";
 import type React from "react";
 import styled from "styled-components";
 
-interface FooterSectionProps {
-  scrollToSection: (id: string) => void;
-}
-
 const FooterContainer = styled.footer`
   background-color: #3c3744; /* brand-dark-gray-purple */
   color: #fbfff1; /* brand-off-white */
@@ -112,7 +108,7 @@ const BottomSection = styled.div`
   color: #b4c5e4; /* brand-light-blue-gray */
 `;
 
-const FooterSection: React.FC<FooterSectionProps> = ({ scrollToSection }) => {
+const FooterSection: React.FC = () => {
   return (
     <FooterContainer>
       <Container>

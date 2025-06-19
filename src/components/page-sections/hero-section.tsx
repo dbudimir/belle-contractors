@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-// import { Button } from "@/components/ui/button";
+import { scrollToAnchor } from "@/helpers/scrollToAnchor";
+
 import Button from "@/components/Button";
 import { ChevronRight } from "lucide-react";
 import type React from "react";
@@ -37,13 +38,13 @@ const HeroContainer = styled.div`
 
 const HeroCopyContainer = styled.div`
   z-index: 10;
-  max-width: 700px;
+  max-width: 600px;
   position: relative;
 `;
 
 const HeroSectionAnimation = styled.div`
   position: absolute;
-  top: 40%;
+  top: 45%;
   left: 25%;
   height: 40vw;
   min-height: 500px;
@@ -73,10 +74,10 @@ const BackgroundImage = styled(Image)`
 
 const StyledH1 = styled.h1`
   font-size: 3.75rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
   color: #3c3744; /* text-brand-dark-gray-purple */
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 
   ${(props) => props.theme.mediaQueries.tablet} {
     font-size: 3.5rem;
@@ -87,27 +88,12 @@ const StyledH1 = styled.h1`
   }
 `;
 
-const StyledH2 = styled.h2`
-  font-size: 2.5rem;
-  margin-bottom: 1.25rem;
-  color: #3c3744; /* text-brand-dark-gray-purple */
-  font-weight: 400;
-  line-height: 1;
-
-  ${(props) => props.theme.mediaQueries.tablet} {
-    font-size: 1.5rem;
-  }
-
-  ${(props) => props.theme.mediaQueries.mobile} {
-    font-size: 1.25rem;
-  }
-`;
-
 const StyledP = styled.p`
   font-size: 1.25rem;
   color: #3e3fa2; /* text-accent-primary */
-  max-width: 36rem;
+  max-width: 75%;
   margin-bottom: 1.5rem;
+  font-weight: 400;
   font-family: Helvetica, Arial, sans-serif;
   color: #3c3744; /* text-brand-dark-gray-purple */
 
@@ -127,11 +113,7 @@ const FlexHeroSectionContainer = styled(HeroSectionContainer)`
   align-items: center;
 `;
 
-interface HeroSectionProps {
-  scrollToSection: (id: string) => void;
-}
-
-const FlexHeroSection: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
+const FlexHeroSection: React.FC = () => {
   return (
     <FlexHeroSectionContainer id="hero">
       {/* Background Image */}
@@ -150,17 +132,15 @@ const FlexHeroSection: React.FC<HeroSectionProps> = ({ scrollToSection }) => {
       {/* Content */}
       <HeroContainer>
         <HeroCopyContainer>
-          <StyledH1>Keep units moving</StyledH1>
-          <StyledH2>We'll handle the rest</StyledH2>
+          <StyledH1>Drive property value</StyledH1>
           <StyledP>
-            Reliable repair and renovation services for home owners, property
-            managers and real estate investors.
+            Reliable repair and renovation services that boost rental income,
+            create value and reduce long-term maintenance.
           </StyledP>
           <Button
-            onClick={() => scrollToSection("contact")}
+            onClick={() => scrollToAnchor("contact")}
             text="Contact Us"
             rightIcon={<ChevronRightIcon />}
-            animateIcon
           />
         </HeroCopyContainer>
       </HeroContainer>

@@ -7,7 +7,7 @@ import PropertyMaintenanceSection from "@/components/page-sections/property-main
 import WhatWeDoSection from "@/components/page-sections/what-we-do-section";
 import ContactSection from "@/components/page-sections/contact-section";
 import FooterSection from "@/components/page-sections/footer-section";
-import { scrollToAnchor } from "@/helpers/scrollToAnchor";
+import InfoSections from "@/components/page-sections/info-sections";
 
 export default function ConstructionSitePage() {
   return (
@@ -15,13 +15,14 @@ export default function ConstructionSitePage() {
       <Nav />
 
       <main>
-        <HeroSection scrollToSection={scrollToAnchor} />
+        <HeroSection />
+        <InfoSections />
         <PropertyMaintenanceSection />
         <WhatWeDoSection />
         <ContactSection />
       </main>
 
-      <FooterSection scrollToSection={scrollToAnchor} />
+      <FooterSection />
     </div>
   );
 }

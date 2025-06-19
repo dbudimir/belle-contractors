@@ -28,6 +28,7 @@ export const theme = {
     xl: "2rem",
     xxl: "3rem",
   },
+  maxWidth: "1200px",
 };
 
 export type Theme = typeof theme;

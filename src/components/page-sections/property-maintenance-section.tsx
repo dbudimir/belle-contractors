@@ -65,6 +65,7 @@ const Grid = styled.div`
 
   ${(props) => props.theme.mediaQueries.tablet} {
     grid-template-columns: repeat(1, 1fr);
+    justify-items: center;
   }
 `;
 
@@ -77,6 +78,8 @@ const StyledCard = styled.div`
   background-color: #ffffff;
   border-radius: 0.5rem;
   border: 1px solid #e5e7eb;
+  max-width: 400px;
+  /* margin: 0 auto; */
 
   &:hover {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),

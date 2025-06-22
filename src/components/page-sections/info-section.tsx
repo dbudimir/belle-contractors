@@ -7,7 +7,7 @@ import { CheckCircle } from "lucide-react"; // Using Lucide for icons
 import Button from "@/components/Button";
 import { scrollToAnchor } from "@/helpers/scrollToAnchor";
 
-interface SectionProps {
+interface InfoSectionProps {
   imageSrc: string;
   imageAlt: string;
   headline: string;
@@ -19,10 +19,15 @@ interface SectionProps {
   buttonText?: string;
   buttonHref?: string;
   buttonOnClick?: () => void;
+  noBottomPadding?: boolean;
 }
 
-const SectionWrapper = styled.section<{ $bgColor?: string }>`
-  padding: 6rem 2rem;
+const SectionWrapper = styled.section<{
+  $bgColor?: string;
+  $noBottomPadding?: boolean;
+}>`
+  padding: 6rem 2rem
+    ${({ $noBottomPadding }) => ($noBottomPadding ? "0" : "6rem")} 2rem;
   background-color: ${({ $bgColor, theme }) =>
     $bgColor || theme.colors.background};
 
@@ -54,6 +59,7 @@ const ImageWrapper = styled.div`
   img {
     width: 100%;
     max-width: 600px;
+    max-height: 400px;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -123,7 +129,7 @@ const PointItem = styled.li`
   }
 `;
 
-const InfoSection: React.FC<SectionProps> = ({
+const InfoSection: React.FC<InfoSectionProps> = ({
   imageSrc,
   imageAlt,
   headline,
@@ -133,9 +139,13 @@ const InfoSection: React.FC<SectionProps> = ({
   backgroundColor,
   buttonText,
   buttonOnClick,
+  noBottomPadding,
 }) => {
   return (
-    <SectionWrapper $bgColor={backgroundColor}>
+    <SectionWrapper
+      $bgColor={backgroundColor}
+      $noBottomPadding={noBottomPadding}
+    >
       <ContentContainer $imagePosition={imagePosition}>
         <ImageWrapper>
           <Image
@@ -157,44 +167,16 @@ const InfoSection: React.FC<SectionProps> = ({
               </PointItem>
             ))}
           </PointList>
-          {buttonText && <Button text={buttonText} onClick={buttonOnClick} />}
+          {buttonText && (
+            <Button
+              text={buttonText}
+              onClick={buttonOnClick || (() => scrollToAnchor("contact"))}
+            />
+          )}
         </TextWrapper>
       </ContentContainer>
     </SectionWrapper>
   );
 };
 
-const section1Data = {
-  imageSrc: "/images/rental-rates.png",
-  imageAlt: "Renovated apartment space with new amenities",
-  headline: "Boost rental rates with no out-of-pocket expense",
-  points: [
-    "We help you make the right improvements—designed to maximize long-term value and increase monthly income.",
-    "Make way for the premium amenities renters want.",
-    "We reconfigure units to accommodate modern appliances, in-unit laundry, smart home features, and more.",
-  ],
-  imagePosition: "left" as "left" | "right",
-};
-
-const section2Data = {
-  imageSrc: "/images/assessments.png",
-  imageAlt: "Contractor and engineer reviewing blueprints",
-  headline: "Get more value out of property assessments",
-  points: [
-    "Buying a property? Get a free property assessment and cut down on hidden repair costs.",
-    "Make cost-effective decisions that prevent wasteful spending and protect long-term value.",
-    "Save money with practical, effective solutions.",
-  ],
-  buttonText: "Get Free Assessment",
-  buttonOnClick: () => scrollToAnchor("contact"),
-  imagePosition: "right" as "left" | "right",
-};
-
-export default function InfoSections() {
-  return (
-    <>
-      <InfoSection {...section1Data} />
-      <InfoSection {...section2Data} backgroundColor="#f5f5f5" />{" "}
-    </>
-  );
-}
+export default InfoSection;

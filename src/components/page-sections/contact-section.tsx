@@ -54,9 +54,10 @@ const ContentContainer = styled.div`
   }
 `;
 
-const FlexContainer = styled.div`
+const FlexContainer = styled.div<{ $formPosition: "left" | "right" }>`
   display: flex;
-  justify-content: flex-end;
+  justify-content: ${(props) =>
+    props.$formPosition === "left" ? "flex-start" : "flex-end"};
   align-items: center;
   min-height: 600px;
 `;
@@ -208,7 +209,21 @@ interface FormState {
   message: string;
 }
 
-const ContactSection: React.FC = () => {
+interface ContactSectionProps {
+  title?: string;
+  description?: string;
+  backgroundImageUrl?: string;
+  formPosition?: "left" | "right";
+  inquiryType?: string;
+}
+
+const ContactSection: React.FC<ContactSectionProps> = ({
+  title = "Let's build something great together.",
+  description = "Whether you're planning a major project, need ongoing property maintenance, or have a quick repair, we're here to help.",
+  backgroundImageUrl = "/images/construction-50-50.jpg",
+  formPosition = "right",
+  inquiryType = "Property Management",
+}) => {
   const [formState, setFormState] = useState<FormState | null>(null);
   const [isPending, setIsPending] = useState(false);
 
@@ -223,6 +238,7 @@ const ContactSection: React.FC = () => {
       email: formData.get("email") as string,
       phone: formData.get("phone") as string,
       message: formData.get("message") as string,
+      inquiryType: formData.get("inquiryType") as string,
     };
 
     try {
@@ -256,7 +272,7 @@ const ContactSection: React.FC = () => {
       {/* Full-width background image */}
       <BackgroundImageContainer>
         <StyledImage
-          src="/images/construction-50-50.jpg"
+          src={backgroundImageUrl}
           alt="Construction work in progress"
           fill
         />
@@ -266,19 +282,16 @@ const ContactSection: React.FC = () => {
 
       {/* Content positioned above background */}
       <ContentContainer>
-        <FlexContainer>
+        <FlexContainer $formPosition={formPosition}>
           {/* Contact form */}
           <StyledCard>
             <StyledCardHeader>
-              <StyledCardTitle>
-                Let&apos;s build something great together.
-              </StyledCardTitle>
-              <StyledCardDescription>
-                Whether you're planning a major project, need ongoing property
-                maintenance, or have a quick repair, we're here to help.
-              </StyledCardDescription>
+              <StyledCardTitle>{title}</StyledCardTitle>
+              <StyledCardDescription>{description}</StyledCardDescription>
             </StyledCardHeader>
             <StyledForm onSubmit={handleSubmit}>
+              {/* Hidden field for inquiry type */}
+              <input type="hidden" name="inquiryType" value={inquiryType} />
               <FormGroup>
                 <StyledLabel htmlFor="name">Full Name *</StyledLabel>
                 <StyledInput

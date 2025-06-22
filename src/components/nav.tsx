@@ -3,8 +3,9 @@ import styled from "styled-components";
 import Button from "./Button";
 import { scrollToAnchor } from "@/helpers/scrollToAnchor";
 import Link from "next/link";
-import { Phone } from "lucide-react";
+import { Phone, Menu, X } from "lucide-react";
 import Logo from "./Logo";
+import { usePathname } from "next/navigation";
 
 const StyledLink = styled(Link)`
   display: inline-block;
@@ -17,15 +18,15 @@ const StyledLink = styled(Link)`
 `;
 
 const MobilePhoneBar = styled.div`
-  display: none;
   background-color: #3c3744;
   padding: 0.5rem 2rem;
   position: sticky;
   top: 0;
   z-index: 1001;
+  display: block;
 
   ${(props) => props.theme.mediaQueries.tablet} {
-    display: block;
+    padding: 0.5rem 1rem;
   }
 `;
 
@@ -44,20 +45,31 @@ const MobilePhoneLink = styled.a`
   color: #b4c5e4;
   font-weight: 500;
   text-decoration: none;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  cursor: pointer;
 
   svg {
     max-height: 16px;
+    transition: transform 0.3s ease;
   }
 
   &:hover {
-    opacity: 0.8;
+    opacity: 0.9;
+    transform: translateY(-1px);
+
+    svg {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
 const NavContainer = styled.nav<{ $hasBackground: boolean }>`
   position: sticky;
-  top: 0;
+  top: 40px; /* Height of phone bar */
   z-index: 1000;
   padding: 1rem 2rem;
   transition: all 0.3s ease;
@@ -68,7 +80,6 @@ const NavContainer = styled.nav<{ $hasBackground: boolean }>`
 
   ${(props) => props.theme.mediaQueries.tablet} {
     padding: 1rem;
-    top: 40px; /* Height of mobile phone bar */
   }
 `;
 
@@ -85,23 +96,46 @@ const NavContent = styled.div`
 const NavItems = styled.div`
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 
   ${(props) => props.theme.mediaQueries.tablet} {
     display: none;
   }
 `;
 
-const NavItem = styled.a`
+const NavItem = styled.a<{ $isActive?: boolean }>`
   text-decoration: none;
   color: #333;
   font-weight: 500;
   font-size: 1rem;
-  transition: color 0.3s ease;
-  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+
+  ${(props) =>
+    props.$isActive &&
+    `
+    color: #232166;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #232166;
+      border-radius: 1px;
+    }
+  `}
 
   &:hover {
     color: #232166;
+    transform: translateY(-1px);
+    cursor: pointer;
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -112,11 +146,27 @@ const MobileMenuButton = styled.button`
   cursor: pointer;
   padding: 0.5rem;
   color: #333;
+  transition: all 0.3s ease;
 
   ${(props) => props.theme.mediaQueries.tablet} {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    color: #232166;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 `;
 
@@ -132,23 +182,49 @@ const MobileMenu = styled.div<{ $isOpen: boolean }>`
     background-color: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
     flex-direction: column;
-    padding: 1rem 2rem 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 1rem 2rem 3rem;
+    box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.1);
+    z-index: 999;
   }
 `;
 
-const MobileNavItem = styled.a`
+const MobileNavItem = styled.a<{ $isActive?: boolean }>`
   text-decoration: none;
   color: #333;
   font-weight: 500;
   font-size: 1.1rem;
-  padding: 1rem 0;
+  padding: 0.5rem 0;
   border-bottom: 1px solid #eee;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
+  position: relative;
+
+  ${(props) =>
+    props.$isActive &&
+    `
+    color: #232166;
+    font-weight: 600;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: #232166;
+      border-radius: 1px;
+    }
+  `}
 
   &:hover {
     color: #232166;
+    padding-left: 0.5rem;
+    background-color: rgba(35, 33, 102, 0.05);
+  }
+
+  &:active {
+    background-color: rgba(35, 33, 102, 0.1);
   }
 
   &:last-child {
@@ -156,28 +232,32 @@ const MobileNavItem = styled.a`
   }
 `;
 
-const PhoneLink = styled.a`
+const NavSection = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
+  position: relative;
+`;
+
+const MobileNavSection = styled.div`
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+`;
+
+const MobileNavSectionTitle = styled.div`
+  font-size: 0.9rem;
+  font-weight: 600;
   color: #6b7280;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.3s ease;
-  width: 100%;
-  max-width: max-content;
-
-  svg {
-    max-height: 18px;
-  }
-
-  &:hover {
-    color: #232166;
-  }
-
-  ${(props) => props.theme.mediaQueries.tablet} {
-    display: none;
-  }
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.5rem 0;
 `;
 
 interface NavItemType {
@@ -185,12 +265,37 @@ interface NavItemType {
   url: string;
 }
 
-const navItems: NavItemType[] = [];
+interface NavSectionType {
+  title: string;
+  items: NavItemType[];
+}
+
+const navSections: NavSectionType[] = [
+  {
+    title: "Services",
+    items: [
+      {
+        label: "Handyman Services",
+        url: "/handyman-services-hoschton-braselton",
+      },
+    ],
+  },
+  {
+    title: "Property Solutions",
+    items: [
+      {
+        label: "Property Management",
+        url: "/",
+      },
+    ],
+  },
+];
 
 const Nav: React.FC = () => {
   const [hasBackground, setHasBackground] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -200,6 +305,10 @@ const Nav: React.FC = () => {
 
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
+      // Close mobile menu when resizing to desktop
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
     };
 
     // Initial check
@@ -216,6 +325,11 @@ const Nav: React.FC = () => {
 
   const handleContactClick = () => {
     scrollToAnchor("contact");
+    setIsMobileMenuOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
@@ -235,29 +349,29 @@ const Nav: React.FC = () => {
             <Logo size={isMobile ? "sm" : "md"} />
           </StyledLink>
 
-          <div style={{ width: "100%", flexGrow: 1 }} />
+          <div style={{ flexGrow: 1 }} />
 
           <NavItems>
-            {navItems.map((item, index) => (
-              <NavItem
-                key={index}
-                href={item.url}
-                onClick={(e) => {
-                  if (item.url.startsWith("#")) {
-                    e.preventDefault();
-                    scrollToAnchor(item.url.substring(1));
-                  }
-                }}
-              >
-                {item.label}
-              </NavItem>
+            {navSections.map((section, sectionIndex) => (
+              <NavSection key={sectionIndex}>
+                {section.items.map((item, itemIndex) => (
+                  <NavItem
+                    key={itemIndex}
+                    href={item.url}
+                    $isActive={pathname === item.url}
+                    onClick={(e) => {
+                      if (item.url.startsWith("#")) {
+                        e.preventDefault();
+                        scrollToAnchor(item.url.substring(1));
+                      }
+                    }}
+                  >
+                    {item.label}
+                  </NavItem>
+                ))}
+              </NavSection>
             ))}
           </NavItems>
-
-          <PhoneLink href="tel:270-925-1461">
-            <Phone />
-            <span>270-925-1461</span>
-          </PhoneLink>
 
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <Button
@@ -267,23 +381,33 @@ const Nav: React.FC = () => {
               size="sm"
             />
           </div>
+
+          <MobileMenuButton onClick={toggleMobileMenu}>
+            {isMobileMenuOpen ? <X /> : <Menu />}
+          </MobileMenuButton>
         </NavContent>
 
         <MobileMenu $isOpen={isMobileMenuOpen}>
-          {navItems.map((item, index) => (
-            <MobileNavItem
-              key={`${item.label}-${index}`}
-              href={item.url}
-              onClick={(e) => {
-                if (item.url.startsWith("#")) {
-                  e.preventDefault();
-                  scrollToAnchor(item.url.substring(1));
-                }
-                setIsMobileMenuOpen(false);
-              }}
-            >
-              {item.label}
-            </MobileNavItem>
+          {navSections.map((section, sectionIndex) => (
+            <MobileNavSection key={sectionIndex}>
+              <MobileNavSectionTitle>{section.title}</MobileNavSectionTitle>
+              {section.items.map((item, itemIndex) => (
+                <MobileNavItem
+                  key={`${item.label}-${itemIndex}`}
+                  href={item.url}
+                  $isActive={pathname === item.url}
+                  onClick={(e) => {
+                    if (item.url.startsWith("#")) {
+                      e.preventDefault();
+                      scrollToAnchor(item.url.substring(1));
+                    }
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  {item.label}
+                </MobileNavItem>
+              ))}
+            </MobileNavSection>
           ))}
         </MobileMenu>
       </NavContainer>

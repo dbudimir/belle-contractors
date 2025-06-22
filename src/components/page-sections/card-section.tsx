@@ -1,20 +1,25 @@
 "use client";
 
-import {
-  RefreshCw,
-  CheckCircle,
-  Wrench,
-  Briefcase,
-  ShieldCheck,
-  Search,
-} from "lucide-react";
 import styled from "styled-components";
 import type React from "react";
 
+interface CardData {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+}
+
+interface CardSectionProps {
+  title: string;
+  subtitle: string;
+  cards: CardData[];
+  backgroundColor?: string;
+}
+
 // Styled Components
-const Section = styled.section`
+const Section = styled.section<{ $bgColor?: string }>`
   padding: 6rem 0;
-  background-color: #f5f5f5; /* brand-light-blue-gray */
+  background-color: ${({ $bgColor }) => $bgColor || "#f5f5f5"};
 
   ${(props) => props.theme.mediaQueries.tablet} {
     padding: 4rem 0;
@@ -69,7 +74,7 @@ const Grid = styled.div`
     grid-template-columns: repeat(2, 1fr);
   }
 
-  ${(props) => props.theme.mediaQueries.tablet} {
+  ${(props) => props.theme.mediaQueries.mobile} {
     grid-template-columns: repeat(1, 1fr);
   }
 `;
@@ -153,52 +158,32 @@ const ServiceTile = ({
   </StyledCard>
 );
 
-const WhatWeDoSection: React.FC = () => {
+const CardSection: React.FC<CardSectionProps> = ({
+  title,
+  subtitle,
+  cards,
+  backgroundColor,
+}) => {
   return (
-    <Section id="what-we-do">
+    <Section $bgColor={backgroundColor}>
       <Container>
         <HeaderWrapper>
-          <Title>Specialized Property Solutions</Title>
-          <Subtitle>
-            Targeted services to meet the unique needs of property owners and
-            managers.
-          </Subtitle>
+          <Title>{title}</Title>
+          <Subtitle>{subtitle}</Subtitle>
         </HeaderWrapper>
         <Grid>
-          <ServiceTile
-            icon={RefreshCw}
-            title="Turnover & Maintenance"
-            description="Quick, reliable service to get units rent-ready between tenants."
-          />
-          <ServiceTile
-            icon={CheckCircle}
-            title="Tenant-Ready Repairs"
-            description="Fast fixes and improvements that meet move-in standards and keep tenants happy."
-          />
-          <ServiceTile
-            icon={Wrench}
-            title="Unit Prep & Repair"
-            description="From patching walls to installing fixtures—we handle everything before the next showing."
-          />
-          <ServiceTile
-            icon={Briefcase}
-            title="Real Estate Support"
-            description="End-to-end maintenance tailored for busy realtors and property teams."
-          />
-          <ServiceTile
-            icon={ShieldCheck}
-            title="Property Upkeep"
-            description="Ongoing maintenance to keep your properties in top shape, inside and out."
-          />
-          <ServiceTile
-            icon={Search}
-            title="Pre-Sale Inspections & Repairs"
-            description="Identify and address issues to maximize property value before listing."
-          />
+          {cards.map((card, index) => (
+            <ServiceTile
+              key={index}
+              icon={card.icon}
+              title={card.title}
+              description={card.description}
+            />
+          ))}
         </Grid>
       </Container>
     </Section>
   );
 };
 
-export default WhatWeDoSection;
+export default CardSection;

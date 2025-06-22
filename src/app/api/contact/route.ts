@@ -6,6 +6,7 @@ interface ContactFormData {
   email: string;
   phone?: string;
   message: string;
+  inquiryType: string;
 }
 
 interface SubmissionResult {
@@ -16,14 +17,15 @@ interface SubmissionResult {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body: ContactFormData = await request.json();
-    const { name, email, phone, message } = body;
+    const { name, email, phone, message, inquiryType } = body;
 
     // Validate required fields
-    if (!name || !email || !message) {
+    if (!name || !email || !message || !inquiryType) {
       return NextResponse.json(
         {
           success: false,
-          message: "Missing required fields (Name, Email, Message).",
+          message:
+            "Missing required fields (Name, Email, Message, Inquiry Type).",
         },
         { status: 400 }
       );
@@ -67,13 +69,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_TO,
-      subject: `Website Contact Form Submission from ${name}`,
+      subject: `${inquiryType} Form Submission from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
           <div style="background-color: #090c9b; color: white; padding: 20px; text-align: center;">
             <h2 style="margin: 0;">New Contact Form Submission</h2>
+            <p style="margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">${inquiryType}</p>
           </div>
           <div style="padding: 20px;">
+            <p style="margin-bottom: 10px;"><strong>Inquiry Type:</strong> <span style="color: #090c9b; font-weight: bold;">${inquiryType}</span></p>
             <p style="margin-bottom: 10px;"><strong>Name:</strong> ${name}</p>
             <p style="margin-bottom: 10px;"><strong>Email:</strong> ${email}</p>
             <p style="margin-bottom: 20px;"><strong>Phone:</strong> ${
@@ -92,8 +96,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         </div>
       `,
       text: `
-        New Contact Form Submission
+        New Contact Form Submission - ${inquiryType}
         
+        Inquiry Type: ${inquiryType}
         Name: ${name}
         Email: ${email}
         Phone: ${phone || "No phone provided"}
